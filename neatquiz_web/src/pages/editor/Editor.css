@@ -23,6 +23,15 @@
   cursor: pointer;
 }
 
+.editor__deleteBtn {
+  padding: 10px;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  background-color: maroon;
+  cursor: pointer;
+}
+
 .editor__qnHeading {
   margin-top: 20px;
 }
@@ -32,6 +41,10 @@
 .editor__btnContainer {
   display: flex;
   justify-content: flex-end;
+}
+
+.editor__btnContainer > * {
+  margin-left: 5px;
 }
 
 .editor__label {
@@ -46,10 +59,33 @@
   flex-wrap: wrap;
 }
 .editor__qnaBox {
-  flex: 40%;
-  margin: 5px;
+  margin: 5px 0px;
   padding: 10px;
-  background-color: rgb(211, 211, 211);
+  background-color: lavender;
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+}
+
+.editor__qElement {
   display: flex;
   flex-direction: column;
+  flex: 1;
+}
+
+.editor__aElement {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.editor__discardQnBtn {
+  padding: 10px;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  background-color: maroon;
+  cursor: pointer;
+  margin-left: 10px;
 }

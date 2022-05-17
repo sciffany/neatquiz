@@ -13,7 +13,7 @@ function Editor() {
   const [state, setState] = useState({
     creating: true,
     quizId: "",
-    quizTitle: "",
+    quizTitle: "Untitled",
     quizQuestions: [],
     quizPublished: false,
   });
@@ -30,16 +30,21 @@ function Editor() {
 
   useEffect(() => {}, []);
 
+  function checkDirty() {}
+
   return (
     <div>
       <Navbar></Navbar>
       <div className="editor">
         <div className="editor__btnContainer">
           <button className="editor__saveBtn" onClick={gotoDashboard}>
-            Save
+            Save Changes
           </button>
           <button className="editor__discardBtn" onClick={gotoDashboard}>
-            Discard
+            Discard Changes
+          </button>
+          <button className="editor__deleteBtn" onClick={gotoDashboard}>
+            Delete Quiz
           </button>
         </div>
         <div className="bold">Quiz Title</div>
@@ -53,28 +58,24 @@ function Editor() {
 
         <div className="editor__qnaContainer">
           <div className="editor__qnaBox">
+            <div className="editor__qElement">
+              <div className="editor__label">Question</div>
+              <input onChange={checkDirty}></input>
+            </div>
+            <div className="editor__aElement">
+              <div className="editor__label">Possible Answers</div>
+              <input onChange={checkDirty}></input>
+            </div>
             <div className="editor__qnaBtnContainer">
-              <button className="editor__discardBtn" onClick={gotoDashboard}>
-                Discard
+              <button className="editor__discardQnBtn" onClick={gotoDashboard}>
+                Delete
               </button>
             </div>
-            <div className="editor__label">Question</div>
-            <input value={state.quizTitle} onChange={updateQuizTitle}></input>
-            <div className="editor__label">Possible Answers</div>
-            <input value={state.quizTitle} onChange={updateQuizTitle}></input>
           </div>
 
-          <div className="editor__qnaBox">
-            <div className="editor__qnaBtnContainer">
-              <button className="editor__discardBtn" onClick={gotoDashboard}>
-                Discard
-              </button>
-            </div>
-            <div className="editor__label">Question</div>
-            <input value={state.quizTitle} onChange={updateQuizTitle}></input>
-            <div className="editor__label">Possible Answers</div>
-            <input value={state.quizTitle} onChange={updateQuizTitle}></input>
-          </div>
+          <button className="editor__saveBtn" onClick={gotoDashboard}>
+            Add Question
+          </button>
         </div>
       </div>
     </div>

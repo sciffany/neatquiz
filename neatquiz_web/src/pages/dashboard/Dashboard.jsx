@@ -36,7 +36,7 @@ function Dashboard() {
       <Navbar></Navbar>
 
       <div className="decks">
-        <div className="giga-font bold">My Decks</div>
+        <div className="giga-font bold">My Quizzes</div>
         <div className="decks__hr">
           <hr />
         </div>
@@ -44,12 +44,12 @@ function Dashboard() {
         <div className="decks__deck">
           <div className="deck__title">Words Ending in -IST</div>
           <div>Guess these words ending in -IST</div>
-          <div>Number of Cards: 20</div>
+          <div>Quiz Length: 20</div>
         </div>
         <div className="decks__deck">
           <div className="deck__title">Words Ending in -IST#2</div>
           <div>Guess these words ending in -IST</div>
-          <div>Number of Cards: 200</div>
+          <div>Quiz Length: 200</div>
         </div>
         <div className="decks__deck">
           <button className="decks__createBtn" onClick={goToEditor}>

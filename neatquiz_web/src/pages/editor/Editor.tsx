@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../features/auth/firebase.js";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Navbar from "../../components/common/Navbar";
 import "./Editor.css";
 import "../../components/common/Common.css";
@@ -30,9 +30,6 @@ function Editor() {
     questions: [],
     published: false,
   });
-  const gotoDashboard = () => {
-    navigate("/dashboard");
-  };
   const updateQuizTitle = (event: any) => {
     setState((state) => ({
       ...state,
@@ -64,6 +61,16 @@ function Editor() {
     }));
   };
 
+  const deleteQna = (qnaIndex: number) => {
+    const newQuestions = state.questions.filter(
+      (_: any, index: number) => index !== qnaIndex
+    );
+
+    setState((state) => ({
+      ...state,
+      questions: newQuestions,
+    }));
+  };
   const addQna = () => {
     setState((state) => ({
       ...state,
@@ -71,6 +78,24 @@ function Editor() {
     }));
   };
 
+  const saveChanges = async () => {
+    const quiz = doc(db, "quizzes", state.quizId);
+    await updateDoc(quiz, {
+      title: state.title,
+      description: state.description,
+      questions: state.questions,
+      published: state.published,
+      modified: new Date().toISOString(),
+    });
+  };
+  const exit = async () => {
+    const acceptDelete = window.confirm(
+      "Are you sure you want to navigate away? Any unsaved changes will be lost"
+    );
+    if (acceptDelete) {
+      navigate("/dashboard");
+    }
+  };
   const deleteQuiz = async () => {
     const acceptDelete = window.confirm(
       "Are you sure you want to delete this quiz? This action cannot be undone."
@@ -92,16 +117,6 @@ function Editor() {
         ...state,
         ...docData,
         quizId,
-        questions: [
-          {
-            question: "Hi",
-            answer: "Hello",
-          },
-          {
-            question: "Hi2",
-            answer: "Hello2",
-          },
-        ],
       }));
     }
     retrieveQuiz();
@@ -115,15 +130,19 @@ function Editor() {
           <div>
             Published
             <label className="switch">
-              <input onChange={updateCheckbox} type="checkbox" />
+              <input
+                onChange={updateCheckbox}
+                checked={state.published}
+                type="checkbox"
+              />
               <span className="slider round"></span>
             </label>
           </div>
-          <button className="editor__saveBtn" onClick={gotoDashboard}>
+          <button className="editor__saveBtn" onClick={saveChanges}>
             Save Changes
           </button>
-          <button className="editor__discardBtn" onClick={gotoDashboard}>
-            Discard Changes
+          <button className="editor__discardBtn" onClick={exit}>
+            Exit
           </button>
           <button className="editor__deleteBtn" onClick={deleteQuiz}>
             Delete Quiz
@@ -161,11 +180,14 @@ function Editor() {
                 <input
                   value={qna.answer}
                   className="editor__input"
-                  onChange={() => {}}
+                  onChange={(event) => updateQna(event, qnaIndex, "answer")}
                 ></input>
               </div>
               <div className="editor__qnaBtnContainer">
-                <button className="editor__deleteQnBtn" onClick={gotoDashboard}>
+                <button
+                  className="editor__deleteQnBtn"
+                  onClick={() => deleteQna(qnaIndex)}
+                >
                   Delete
                 </button>
               </div>
@@ -175,8 +197,6 @@ function Editor() {
           <button className="editor__saveBtn" onClick={addQna}>
             Add Question
           </button>
-
-          {JSON.stringify(state)}
         </div>
       </div>
     </div>

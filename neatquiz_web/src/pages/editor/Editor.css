@@ -39,6 +39,7 @@
 .editor__qnaBox > input {
   margin: 4px 0px;
 }
+
 .editor__btnContainer {
   display: flex;
   justify-content: flex-end;

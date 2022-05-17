@@ -54,20 +54,23 @@ function Editor() {
           onChange={updateQuizTitle}
         ></input>
 
+        <div className="editor__descLabel">Description</div>
+        <textarea className="editor__description"></textarea>
+
         <div className="bold editor__qnHeading">Quiz Questions</div>
 
         <div className="editor__qnaContainer">
           <div className="editor__qnaBox">
             <div className="editor__qElement">
               <div className="editor__label">Question</div>
-              <input onChange={checkDirty}></input>
+              <input className="editor__input" onChange={checkDirty}></input>
             </div>
             <div className="editor__aElement">
               <div className="editor__label">Possible Answers</div>
-              <input onChange={checkDirty}></input>
+              <input className="editor__input" onChange={checkDirty}></input>
             </div>
             <div className="editor__qnaBtnContainer">
-              <button className="editor__discardQnBtn" onClick={gotoDashboard}>
+              <button className="editor__deleteQnBtn" onClick={gotoDashboard}>
                 Delete
               </button>
             </div>

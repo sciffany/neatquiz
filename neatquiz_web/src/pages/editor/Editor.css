@@ -19,7 +19,7 @@
   border: none;
   color: white;
   border-radius: 10px;
-  background-color: red;
+  background-color: gray;
   cursor: pointer;
 }
 
@@ -28,13 +28,14 @@
   border: none;
   color: white;
   border-radius: 10px;
-  background-color: maroon;
+  background-color: #cf1322;
   cursor: pointer;
 }
 
 .editor__qnHeading {
   margin-top: 20px;
 }
+
 .editor__qnaBox > input {
   margin: 4px 0px;
 }
@@ -50,14 +51,17 @@
 .editor__label {
   font-size: 14px;
 }
+
 .editor__qnaBtnContainer {
   display: flex;
   justify-content: flex-end;
 }
+
 .editor__qnaContainer {
   display: flex;
   flex-wrap: wrap;
 }
+
 .editor__qnaBox {
   margin: 5px 0px;
   padding: 10px;
@@ -80,12 +84,25 @@
   margin-left: 10px;
 }
 
-.editor__discardQnBtn {
+.editor__deleteQnBtn {
   padding: 10px;
   border: none;
   color: white;
   border-radius: 10px;
-  background-color: maroon;
+  background-color: black;
   cursor: pointer;
   margin-left: 10px;
+}
+
+.editor__input {
+  font-size: 16px;
+}
+
+.editor__description {
+  font-family: Arial;
+  font-size: 16px;
+}
+
+.editor__descLabel {
+  margin-top: 10px;
 }

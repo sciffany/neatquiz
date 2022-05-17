@@ -1,0 +1,13 @@
+.decks {
+  margin: 10vh;
+}
+.decks__hr {
+  width: 70vh;
+}
+.decks__deck {
+  margin-top: 20px;
+}
+.deck__title {
+  font-size: 18px;
+  font-weight: bold;
+}

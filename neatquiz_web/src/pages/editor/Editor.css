@@ -1,0 +1,12 @@
+.editor {
+  margin: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+.editor__backBtn {
+  width: 50px;
+}
+.editor__qnHeading {
+  margin-top: 20px;
+}

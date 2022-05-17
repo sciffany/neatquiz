@@ -2,33 +2,28 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../features/auth/firebase";
-import { query, collection, getDocs, where } from "firebase/firestore";
+import { query, collection, getDocs, where, addDoc } from "firebase/firestore";
 import Navbar from "../../components/common/Navbar";
 import "./Dashboard.css";
 import "../../components/common/Common.css";
 
 function Dashboard() {
-  const [user, loading, error] = useAuthState(auth);
-  const [name, setName] = useState("");
+  const [user, loading] = useAuthState(auth);
   const navigate = useNavigate();
-  const fetchUserName = async () => {
-    try {
-      const q = query(collection(db, "users"), where("uid", "==", user?.uid));
-      const doc = await getDocs(q);
-      const data = doc.docs[0].data();
-      setName(data.name);
-    } catch (err) {
-      console.error(err);
-      alert("An error occured while fetching user data");
-    }
-  };
+
   useEffect(() => {
-    if (loading) return;
-    if (!user) return navigate("/");
-    fetchUserName();
-  }, [user, loading]);
-  const goToEditor = () => {
-    navigate("/edit");
+    if (loading && !user) return navigate("/");
+  }, [user, loading, navigate]);
+
+  const goToEditor = async () => {
+    const newDoc = await addDoc(collection(db, "quizzes"), {
+      uid: user.uid,
+    });
+    navigate("/edit", {
+      state: {
+        quizId: newDoc.id,
+      },
+    });
   };
 
   return (

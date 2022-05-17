@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../../features/auth/firebase.js";
-import { query, collection, getDocs, where } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { auth, db } from "../../features/auth/firebase.js";
+import {
+  query,
+  collection,
+  getDocs,
+  where,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import Navbar from "../../components/common/Navbar";
 import "./Editor.css";
 import "../../components/common/Common.css";
 
-function Editor() {
-  const [user, loading] = useAuthState(auth);
+type Qna = {
+  question: string;
+  answer: string;
+};
+
+type EditorState = {
+  quizId: string;
+  quizTitle: string;
+  quizQuestions: Qna[];
+  quizPublished: boolean;
+};
+
+function Editor(params: any) {
   const navigate = useNavigate();
-  const [state, setState] = useState({
-    creating: true,
+  const location: { state: any } = useLocation();
+  const [state, setState] = useState<EditorState>({
     quizId: "",
     quizTitle: "Untitled",
     quizQuestions: [],
@@ -27,8 +45,23 @@ function Editor() {
       quizTitle: newQuizTitle,
     }));
   };
+  const deleteQuiz = async () => {
+    const acceptDelete = window.confirm(
+      "Are you sure you want to delete this quiz? This action cannot be undone."
+    );
+    if (acceptDelete) {
+      console.log(doc(db, "quizzes", state.quizId));
+      await deleteDoc(doc(db, "quizzes", state.quizId));
+    }
+    navigate("/dashboard");
+  };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setState((state) => ({
+      ...state,
+      quizId: location?.state?.quizId,
+    }));
+  }, []);
 
   function checkDirty() {}
 
@@ -37,13 +70,20 @@ function Editor() {
       <Navbar></Navbar>
       <div className="editor">
         <div className="editor__btnContainer">
+          <div>
+            Published
+            <label className="switch">
+              <input type="checkbox" />
+              <span className="slider round"></span>
+            </label>
+          </div>
           <button className="editor__saveBtn" onClick={gotoDashboard}>
             Save Changes
           </button>
           <button className="editor__discardBtn" onClick={gotoDashboard}>
             Discard Changes
           </button>
-          <button className="editor__deleteBtn" onClick={gotoDashboard}>
+          <button className="editor__deleteBtn" onClick={deleteQuiz}>
             Delete Quiz
           </button>
         </div>
@@ -79,6 +119,8 @@ function Editor() {
           <button className="editor__saveBtn" onClick={gotoDashboard}>
             Add Question
           </button>
+
+          {JSON.stringify(state)}
         </div>
       </div>
     </div>

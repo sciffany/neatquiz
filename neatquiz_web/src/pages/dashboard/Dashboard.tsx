@@ -32,7 +32,7 @@ function Dashboard() {
     async function loadQuizzes() {
       const q = query(
         collection(db, "quizzes"),
-        orderBy("created"),
+        orderBy("created", "desc"),
         where("uid", "==", user!.uid)
       );
       const querySnapshot = await getDocs(q);

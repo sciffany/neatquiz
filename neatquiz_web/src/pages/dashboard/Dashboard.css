@@ -8,6 +8,7 @@
   margin-top: 20px;
 }
 .deck__title {
+  cursor: pointer;
   font-size: 18px;
   font-weight: bold;
 }

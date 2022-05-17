@@ -14,7 +14,7 @@ import Navbar from "../../components/common/Navbar";
 import "./Editor.css";
 import "../../components/common/Common.css";
 
-type Qna = {
+export type Qna = {
   question: string;
   answer: string;
 };
@@ -50,7 +50,6 @@ function Editor(params: any) {
       "Are you sure you want to delete this quiz? This action cannot be undone."
     );
     if (acceptDelete) {
-      console.log(doc(db, "quizzes", state.quizId));
       await deleteDoc(doc(db, "quizzes", state.quizId));
     }
     navigate("/dashboard");

@@ -13,8 +13,9 @@ export function askQuestion(ctx: any) {
     .split(",")
     .map((expectedAnswer) => expectedAnswer.trim());
 }
+
 export async function handleAnswer(ctx: any) {
-  //   console.log(botState);
+  if (botState.mode !== Mode.Answering) return;
   const answer = ctx.match.input;
   if (
     botState.expectedAnswers.some((expectedAnswer: string) =>
@@ -25,7 +26,6 @@ export async function handleAnswer(ctx: any) {
     broadcastScore(ctx, ctx.from.first_name);
     botState.qNumber++;
     botState.mode = Mode.Asking;
-    ctx.reply("Just received response" + botState.mode);
     if (botState.qNumber == botState.qna.length) {
       endGame(ctx);
     } else {
@@ -63,7 +63,7 @@ function generateBoard() {
 }
 
 function endGame(ctx: any) {
-  ctx.reply("Congrats to all the winners above!");
+  ctx.reply("Congrats to all the winners!");
   botState.mode = Mode.Active;
   botState.quizChoices = [];
   botState.qna = [];

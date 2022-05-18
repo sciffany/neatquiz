@@ -1,18 +1,20 @@
 import { botState, Mode } from "./index";
 
-export function askQuestion(ctx: any) {
-  if (botState.qNumber == botState.qna.length) {
-    endGame(ctx);
-  }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  ctx.reply("Question 1:\n" + botState.qna[botState.qNumber].question);
+export function askQuestion(ctx: any) {
+  ctx.reply(
+    `Question ${botState.qNumber + 1}:\n` +
+      botState.qna[botState.qNumber].question
+  );
   botState.mode = Mode.Answering;
   botState.expectedAnswers = botState.qna[botState.qNumber].answer
     .toLowerCase()
     .split(",")
     .map((expectedAnswer) => expectedAnswer.trim());
 }
-export function handleAnswer(ctx: any) {
+export async function handleAnswer(ctx: any) {
+  //   console.log(botState);
   const answer = ctx.match.input;
   if (
     botState.expectedAnswers.some((expectedAnswer: string) =>
@@ -22,7 +24,14 @@ export function handleAnswer(ctx: any) {
     updateScore(ctx.from.id, ctx.from.first_name);
     broadcastScore(ctx, ctx.from.first_name);
     botState.qNumber++;
-    askQuestion(ctx);
+    botState.mode = Mode.Asking;
+    ctx.reply("Just received response" + botState.mode);
+    if (botState.qNumber == botState.qna.length) {
+      endGame(ctx);
+    } else {
+      await sleep(5000);
+      askQuestion(ctx);
+    }
   }
 }
 
@@ -41,15 +50,43 @@ function broadcastScore(ctx: any, winner: string) {
     }!\n${winner} got it right. 5 marks!` +
       "\n\n" +
       "Scores:\n" +
-      Object.keys(botState.scoreBoard)
-        .map(
-          (id) =>
-            "💎 " + botState.playerNames[id] + " - " + botState.scoreBoard[id]
-        )
-        .join("\n")
+      generateBoard()
   );
 }
 
+function generateBoard() {
+  return Object.keys(botState.scoreBoard)
+    .map(
+      (id) => "💎 " + botState.playerNames[id] + " - " + botState.scoreBoard[id]
+    )
+    .join("\n");
+}
+
 function endGame(ctx: any) {
-  ctx.reply("Congrats!");
+  ctx.reply("Congrats to all the winners above!");
+  botState.mode = Mode.Active;
+  botState.quizChoices = [];
+  botState.qna = [];
+  botState.qNumber = 0;
+  botState.expectedAnswers = [];
+}
+
+export async function skipQuestion(ctx: any) {
+  ctx.reply(`${botState.mode}`);
+  if (botState.mode !== Mode.Answering) return;
+  ctx.reply(
+    `The answer was ${
+      botState.qna[botState.qNumber].answer.split(",")[0]
+    }!\nNobody got it right` +
+      "\n\n" +
+      "Scores:\n" +
+      generateBoard()
+  );
+  botState.qNumber++;
+  if (botState.qNumber == botState.qna.length) {
+    endGame(ctx);
+  } else {
+    await sleep(5000);
+    askQuestion(ctx);
+  }
 }

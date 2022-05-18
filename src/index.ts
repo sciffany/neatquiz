@@ -1,5 +1,5 @@
 import { Set } from "typescript";
-import { handleAnswer } from "./play";
+import { handleAnswer, skipQuestion } from "./play";
 import { chooseQuiz, searchQuiz } from "./search";
 
 require("dotenv").config();
@@ -26,7 +26,8 @@ bot.hears("/start", (ctx) => ctx.reply("Hi, welcome to NeatQuiz!"));
 bot.hears(/^\/search (.+)$/, searchQuiz);
 bot.hears(/^\/[1-9]/, async (ctx) => await chooseQuiz(ctx));
 bot.hears("/natasha", (ctx) => ctx.reply("🐰🥚"));
-bot.hears(/./, handleGenericResponse);
+bot.hears("/next", async (ctx) => await skipQuestion(ctx));
+bot.hears(/./, async (ctx) => await handleGenericResponse(ctx));
 
 bot.startPolling();
 export enum Mode {
@@ -61,6 +62,6 @@ export const botState: BotState = {
 
 async function handleGenericResponse(ctx: any) {
   if (botState.mode == Mode.Answering) {
-    handleAnswer(ctx);
+    await handleAnswer(ctx);
   }
 }

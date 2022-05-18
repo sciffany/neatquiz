@@ -61,47 +61,44 @@ require("dotenv").config();
 // // // process.once("SIGINT", () => bot.stop("SIGINT"));
 // // // process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-// import { Context, Telegraf } from "telegraf";
-// import { Update } from "typegram";
-// const bot: Telegraf<Context<Update>> = new Telegraf(
-//   process.env.TELEGRAM_BOT_TOKEN as string
-// );
+import { Context, Telegraf } from "telegraf";
+import { Update } from "typegram";
+const bot: Telegraf<Context<Update>> = new Telegraf(
+  process.env.TELEGRAM_BOT_TOKEN as string
+);
 
-// bot.start((ctx) => {
-//   ctx.reply("Hello " + ctx.from.first_name + "!");
-// });
-// bot.help((ctx) => {
-//   ctx.reply("Send /start to receive a greeting");
-//   ctx.reply("Send /keyboard to receive a message with a keyboard");
-//   ctx.reply("Send /quit to stop the bot");
-// });
-// bot.command("quit", (ctx) => {
-//   // Explicit usage
-//   ctx.telegram.leaveChat(ctx.message.chat.id);
-//   // Context shortcut
-//   ctx.leaveChat();
-// });
-
-// // bot.on("text", (ctx) => {
-// //   ctx.reply("simple");
-// // });
-// bot.command("oldschool", (ctx) => ctx.reply("Hello"));
-// bot.launch();
-// process.once("SIGINT", () => bot.stop("SIGINT"));
-// process.once("SIGTERM", () => bot.stop("SIGTERM"));
-
-const { Telegraf } = require("telegraf");
-const express = require("express");
-const expressApp = express();
-
-const port = process.env.PORT || 3000;
-expressApp.get("/", (req, res) => {
-  res.send("Hello World!");
+bot.start((ctx) => {
+  ctx.reply("Hello " + ctx.from.first_name + "!");
 });
-expressApp.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+bot.help((ctx) => {
+  ctx.reply("Send /start to receive a greeting");
+  ctx.reply("Send /keyboard to receive a message with a keyboard");
+  ctx.reply("Send /quit to stop the bot");
+});
+bot.command("quit", (ctx) => {
+  // Explicit usage
+  ctx.telegram.leaveChat(ctx.message.chat.id);
+  // Context shortcut
+  ctx.leaveChat();
 });
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-bot.hears(/./, (ctx) => ctx.reply("Hello"));
-bot.startPolling();
+bot.command("oldschool", (ctx) => ctx.reply("Hello"));
+bot.launch();
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+// const { Telegraf } = require("telegraf");
+// const express = require("express");
+// const expressApp = express();
+
+// const port = process.env.PORT || 3000;
+// expressApp.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
+// expressApp.listen(port, () => {
+//   console.log(`Listening on port ${port}`);
+// });
+
+// const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+// bot.hears(/./, (ctx) => ctx.reply("Hello"));
+// bot.startPolling();

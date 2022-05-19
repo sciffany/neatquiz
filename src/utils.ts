@@ -18,12 +18,24 @@ export const emptyBotState: BotState = {
 };
 
 export function createEmptyBotState(ctx: any) {
-  botStates[ctx.message.chat.id] = { ...emptyBotState };
+  botStates[ctx.message.chat.id] = {
+    mode: Mode.Active,
+    quizChoices: [],
+    qna: [],
+    qNumber: 0,
+    expectedAnswers: [],
+    scoreBoard: {},
+    playerNames: {},
+  };
 }
 
 export function resetToChoosingQuestion(ctx: any) {
   botStates[ctx.message.chat.id] = {
-    ...emptyBotState,
+    qna: [],
+    qNumber: 0,
+    expectedAnswers: [],
+    scoreBoard: {},
+    playerNames: {},
     mode: Mode.ChooseQuestion,
     quizChoices: botStates[ctx.message.chat.id].quizChoices,
   };

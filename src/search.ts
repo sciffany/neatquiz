@@ -10,6 +10,8 @@ const index = client.initIndex("quizzes");
 
 export async function searchQuiz(ctx: any) {
   try {
+    if (botState.mode !== Mode.Active && botState.mode !== Mode.ChooseQuestion)
+      return;
     const searchString = ctx.match[1];
     const searchResults = await index.search(searchString);
 
@@ -20,7 +22,9 @@ export async function searchQuiz(ctx: any) {
     const quizMenu = searchResults.hits
       .map(
         (searchResult, index) =>
-          `/${index + 1}\n${searchResult.title}\n${searchResult.description}`
+          `/quiz_${index + 1}\n${searchResult.title}\n${
+            searchResult.description
+          }`
       )
       .join("\n\n");
     ctx.reply("Which quiz would you like to take?\n\n" + quizMenu);
@@ -32,7 +36,9 @@ export async function searchQuiz(ctx: any) {
 export async function chooseQuiz(ctx: any) {
   try {
     if (!botState.quizChoices.length) return;
-    const searchString = ctx.match[0].slice(1);
+    if (botState.mode !== Mode.ChooseQuestion) return;
+
+    const searchString = ctx.match[0].slice(6);
     const docRef = doc(
       db,
       "quizzes",

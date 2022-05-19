@@ -1,7 +1,5 @@
 import { botState, Mode } from "./index";
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
 export function askQuestion(ctx: any) {
   ctx.reply(
     `Question ${botState.qNumber + 1}:\n` +
@@ -14,7 +12,7 @@ export function askQuestion(ctx: any) {
     .map((expectedAnswer) => expectedAnswer.trim());
 }
 
-export async function handleAnswer(ctx: any) {
+export function handleAnswer(ctx: any) {
   if (botState.mode !== Mode.Answering) return;
   const answer = ctx.match.input;
   if (
@@ -29,8 +27,7 @@ export async function handleAnswer(ctx: any) {
     if (botState.qNumber == botState.qna.length) {
       endGame(ctx);
     } else {
-      await sleep(5000);
-      askQuestion(ctx);
+      setTimeout(() => askQuestion(ctx), 5000);
     }
   }
 }
@@ -64,11 +61,13 @@ function generateBoard() {
 
 function endGame(ctx: any) {
   ctx.reply("Congrats to all the winners!");
-  botState.mode = Mode.Active;
+  botState.mode = Mode.ChooseQuestion;
   botState.quizChoices = [];
   botState.qna = [];
   botState.qNumber = 0;
   botState.expectedAnswers = [];
+  botState.scoreBoard = {};
+  botState.playerNames = {};
 }
 
 export async function skipQuestion(ctx: any) {
@@ -86,7 +85,6 @@ export async function skipQuestion(ctx: any) {
   if (botState.qNumber == botState.qna.length) {
     endGame(ctx);
   } else {
-    await sleep(5000);
-    askQuestion(ctx);
+    setTimeout(() => askQuestion(ctx), 5000);
   }
 }

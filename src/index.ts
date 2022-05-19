@@ -21,15 +21,21 @@ expressApp.listen(port, () => {
 ////////////////////////
 //     Bot setup      //
 ////////////////////////
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN, {
+  username: "NeatQuiz" + process.env.TELEGRAM_BOT_TOKEN?.slice(0, 2),
+});
 bot.hears("/start", (ctx) => ctx.reply("Hi, welcome to NeatQuiz!"));
 bot.hears(/^\/search (.+)$/, searchQuiz);
-bot.hears(/^\/[1-9]/, async (ctx) => await chooseQuiz(ctx));
+bot.hears(/^\/quiz_[1-9]/, async (ctx) => await chooseQuiz(ctx));
 bot.hears("/natasha", (ctx) => ctx.reply("🐰🥚"));
 bot.hears("/next", async (ctx) => await skipQuestion(ctx));
 bot.hears(/./, async (ctx) => await handleGenericResponse(ctx));
 
 bot.startPolling();
+
+////////////////////////
+//     Bot state      //
+////////////////////////
 export enum Mode {
   Active,
   ChooseQuestion,
@@ -37,10 +43,12 @@ export enum Mode {
   Answering,
   Inactive,
 }
+
 type Qna = {
   question: string;
   answer: string;
 };
+
 type BotState = {
   mode: Mode;
   quizChoices: string[];
@@ -50,6 +58,7 @@ type BotState = {
   scoreBoard: { [id: string]: number };
   playerNames: { [id: string]: string };
 };
+
 export const botState: BotState = {
   mode: Mode.Active,
   quizChoices: [],

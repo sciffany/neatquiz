@@ -28,7 +28,7 @@ export const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN, {
 
 bot.hears("/start", (ctx) => ctx.reply("Hi, welcome to NeatQuiz!"));
 bot.hears(/^\/search (.+)$/, searchQuiz);
-bot.hears(/^\/quiz_[1-9]/, async (ctx) => await chooseQuiz(ctx));
+bot.hears(/^\/quiz_[1-9]+/, async (ctx) => await chooseQuiz(ctx));
 bot.hears("/natasha", (ctx) => ctx.reply("🐰🥚"));
 bot.hears("/next", async (ctx) => await skipQuestion(ctx));
 bot.hears("/end", async (ctx) => await endGamePrematurely(ctx));

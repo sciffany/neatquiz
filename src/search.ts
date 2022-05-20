@@ -47,11 +47,15 @@ export async function searchQuiz(ctx: any) {
 
 export async function chooseQuiz(ctx: any) {
   const botState = getBotState(ctx);
+  console.log("WTF");
   try {
     if (!botState.quizChoices.length) return;
     if (botState.mode !== Mode.ChooseQuestion) return;
 
-    const questionNumber = parseInt(ctx.match[0].slice(6)) - 1;
+    const chosenQuiz = ctx.match[0];
+    console.log(chosenQuiz);
+    const questionNumber = parseInt(chosenQuiz.slice(6, chosenQuiz.length)) - 1;
+    console.log("QUESTION NUMBER", questionNumber);
     if (questionNumber < 0 || questionNumber >= botState.quizChoices.length)
       return;
 

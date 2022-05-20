@@ -4,6 +4,7 @@ import { BotState, Mode } from "./types";
 export function getBotState(ctx: any) {
   const botState = botStates[ctx.message.chat.id];
   if (!botState) createEmptyBotState(ctx);
+  console.log(botStates[ctx.message.chat.id]);
   return botStates[ctx.message.chat.id];
 }
 

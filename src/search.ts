@@ -3,6 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { Mode } from "./types";
 import { askQuestion } from "./play";
 import { getBotState } from "./utils";
+import { Constants } from "./constants";
 
 require("dotenv").config();
 const algoliasearch = require("algoliasearch");
@@ -31,9 +32,13 @@ export async function searchQuiz(ctx: any) {
       .join("\n\n");
 
     if (quizMenu.length > 0) {
-      ctx.reply("Which quiz would you like to take?\n\n" + quizMenu);
+      ctx.reply(
+        "Which quiz would you like to take?\n\n" + quizMenu + Constants.invite
+      );
     } else {
-      ctx.reply(`Sorry, no results were found for '${searchString}'.`);
+      ctx.reply(
+        `Sorry, no results were found for '${searchString}'${Constants.invite}`
+      );
     }
   } catch (err) {
     console.log(err);

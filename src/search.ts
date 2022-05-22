@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { Mode } from "./types";
-import { askQuestion } from "./play";
+import { askQuestion, showInstructions } from "./play";
 import { getBotState } from "./utils";
 import { Constants } from "./constants";
 
@@ -93,7 +93,7 @@ export async function chooseQuiz(ctx: any) {
       const quizData = docSnap.data();
       botState.qna = quizData.questions;
       botState.mode = Mode.Asking;
-      askQuestion(ctx);
+      showInstructions(ctx, quizData.description);
     }
   } catch (err) {
     console.log(err);

@@ -2,10 +2,18 @@ import { Constants } from "./constants";
 import { Mode } from "./types";
 import { getBotState, resetToChoosingQuestion } from "./utils";
 
+export function showInstructions(ctx: any, description: string) {
+  const botState = getBotState(ctx);
+  ctx.reply("Instructions: " + description);
+  setTimeout(() => askQuestion(ctx), Constants.questionInterval);
+}
+
 export function askQuestion(ctx: any) {
   const botState = getBotState(ctx);
   ctx.reply(
-    `Question ${botState.qNumber + 1}:\n` +
+    `Question ${botState.qNumber + 1} of ${
+      botState.qna.length
+    }\n--------------------------------\n` +
       botState.qna[botState.qNumber].question
   );
   botState.mode = Mode.Answering;
@@ -81,7 +89,9 @@ function generateScoreBoard(ctx, opts?: ScoreBoardParams) {
 export function endGamePrematurely(ctx: any) {
   const botState = getBotState(ctx);
   if (botState.mode !== Mode.Answering && botState.mode !== Mode.Asking) return;
-  ctx.reply(generateScoreBoard(ctx, { gameEndedPrematurely: true }));
+  ctx.reply(
+    "Game stopped." + generateScoreBoard(ctx, { gameEndedPrematurely: true })
+  );
   resetToChoosingQuestion(ctx);
 }
 

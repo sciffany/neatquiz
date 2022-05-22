@@ -1,5 +1,6 @@
+import { Constants } from "./constants";
 import { endGamePrematurely, handleAnswer, skipQuestion } from "./play";
-import { chooseQuiz, searchQuiz } from "./search";
+import { chooseQuiz, searchQuiz, showMenuAgain } from "./search";
 import { BotState, Mode } from "./types";
 import { getBotState } from "./utils";
 
@@ -26,12 +27,14 @@ export const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN, {
   username: "NeatQuiz" + process.env.TELEGRAM_BOT_TOKEN?.slice(0, 2),
 });
 
-bot.hears("/start", (ctx) => ctx.reply("Hi, welcome to NeatQuiz!"));
-bot.hears(/^\/search (.+)$/, searchQuiz);
+bot.hears("/hello", (ctx) => ctx.reply("Hi, welcome to NeatQuiz!"));
+bot.hears(/^\/search(.*)$/, searchQuiz);
 bot.hears(/^\/quiz_[1-9]+/, async (ctx) => await chooseQuiz(ctx));
 bot.hears("/natasha", (ctx) => ctx.reply("🐰🥚"));
 bot.hears("/next", async (ctx) => await skipQuestion(ctx));
 bot.hears("/end", async (ctx) => await endGamePrematurely(ctx));
+bot.hears("/about", (ctx) => ctx.reply(Constants.about));
+bot.hears("/menu", (ctx) => showMenuAgain(ctx));
 bot.hears(/./, (ctx) => handleGenericResponse(ctx));
 
 bot.startPolling();

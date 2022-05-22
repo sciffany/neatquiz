@@ -19,4 +19,5 @@ export type BotState = {
   expectedAnswers: string[];
   scoreBoard: { [id: string]: number };
   playerNames: { [id: string]: string };
+  menuId: string;
 };

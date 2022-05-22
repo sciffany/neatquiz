@@ -1,1 +1,1 @@
-LOCATION=asia-northeast1 PROJECT_ID=neatquiz ALGOLIA_APP_ID=SWVXM265XB ALGOLIA_API_KEY=2f7d53d179d3c1b5f7ea37ea6662dd74 ALGOLIA_INDEX_NAME=quizzes COLLECTION_PATH=quizzes FIELDS=title,created,description GOOGLE_APPLICATION_CREDENTIALS=./sa.json npx firestore-algolia-search
+LOCATION=asia-northeast1 PROJECT_ID=neatquiz ALGOLIA_APP_ID=SWVXM265XB ALGOLIA_API_KEY=2f7d53d179d3c1b5f7ea37ea6662dd74 ALGOLIA_INDEX_NAME=quizzes COLLECTION_PATH=quizzes FIELDS=title,created,description,quizLength,published,uid GOOGLE_APPLICATION_CREDENTIALS=./sa.json npx firestore-algolia-search

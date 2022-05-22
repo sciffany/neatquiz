@@ -4,19 +4,8 @@ import { BotState, Mode } from "./types";
 export function getBotState(ctx: any) {
   const botState = botStates[ctx.message.chat.id];
   if (!botState) createEmptyBotState(ctx);
-  console.log(botStates[ctx.message.chat.id]);
   return botStates[ctx.message.chat.id];
 }
-
-export const emptyBotState: BotState = {
-  mode: Mode.Active,
-  quizChoices: [],
-  qna: [],
-  qNumber: 0,
-  expectedAnswers: [],
-  scoreBoard: {},
-  playerNames: {},
-};
 
 export function createEmptyBotState(ctx: any) {
   botStates[ctx.message.chat.id] = {
@@ -27,6 +16,7 @@ export function createEmptyBotState(ctx: any) {
     expectedAnswers: [],
     scoreBoard: {},
     playerNames: {},
+    menuId: "",
   };
 }
 
@@ -39,6 +29,7 @@ export function resetToChoosingQuestion(ctx: any) {
     playerNames: {},
     mode: Mode.ChooseQuestion,
     quizChoices: botStates[ctx.message.chat.id].quizChoices,
+    menuId: botStates[ctx.message.chat.id].menuId,
   };
 }
 

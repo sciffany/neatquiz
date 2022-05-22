@@ -28,10 +28,10 @@ export function handleAnswer(ctx: any) {
     broadcastScore(ctx, ctx.from.first_name);
     botState.qNumber++;
     botState.mode = Mode.Asking;
-    if (botState.qNumber == botState.qna.length) {
-      endGame(ctx);
-    } else {
+    if (botState.qNumber !== botState.qna.length) {
       setTimeout(() => askQuestion(ctx), Constants.questionInterval);
+    } else {
+      resetToChoosingQuestion(ctx);
     }
   }
 }
@@ -59,30 +59,34 @@ function broadcastScore(ctx: any, winner: string) {
   );
 }
 
-function generateScoreBoard(ctx) {
-  const botState = getBotState(ctx);
-  return Object.keys(botState.scoreBoard)
-    .map(
-      (id) => "💎 " + botState.playerNames[id] + " - " + botState.scoreBoard[id]
-    )
-    .join("\n");
-}
+type ScoreBoardParams = {
+  gameEndedPrematurely?: boolean;
+};
 
-function endGame(ctx: any) {
-  resetToChoosingQuestion(ctx);
-  ctx.reply("Congrats to all the winners!");
+function generateScoreBoard(ctx, opts?: ScoreBoardParams) {
+  const botState = getBotState(ctx);
+  return (
+    Object.keys(botState.scoreBoard)
+      .map(
+        (id) =>
+          "💎 " + botState.playerNames[id] + " - " + botState.scoreBoard[id]
+      )
+      .join("\n") +
+    (botState.qNumber === botState.qna.length - 1 || opts?.gameEndedPrematurely
+      ? Constants.endGameMessage
+      : "")
+  );
 }
 
 export function endGamePrematurely(ctx: any) {
-  ctx.reply(
-    "Game ended. Congrats to all the winners!\n" + generateScoreBoard(ctx)
-  );
+  const botState = getBotState(ctx);
+  if (botState.mode !== Mode.Answering && botState.mode !== Mode.Asking) return;
+  ctx.reply(generateScoreBoard(ctx, { gameEndedPrematurely: true }));
   resetToChoosingQuestion(ctx);
 }
 
 export async function skipQuestion(ctx: any) {
   const botState = getBotState(ctx);
-  ctx.reply(`${botState.mode}`);
   if (botState.mode !== Mode.Answering) return;
   ctx.reply(
     `The answer was ${
@@ -93,9 +97,7 @@ export async function skipQuestion(ctx: any) {
       generateScoreBoard(ctx)
   );
   botState.qNumber++;
-  if (botState.qNumber == botState.qna.length) {
-    endGame(ctx);
-  } else {
+  if (botState.qNumber !== botState.qna.length) {
     setTimeout(() => askQuestion(ctx), Constants.questionInterval);
   }
 }

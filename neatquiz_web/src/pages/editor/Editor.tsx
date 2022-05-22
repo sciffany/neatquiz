@@ -86,6 +86,7 @@ function Editor() {
       questions: state.questions,
       published: state.published,
       modified: new Date().toISOString(),
+      quizLength: state.questions.length,
     });
   };
   const exit = async () => {

@@ -109,5 +109,7 @@ export async function skipQuestion(ctx: any) {
   botState.qNumber++;
   if (botState.qNumber !== botState.qna.length) {
     setTimeout(() => askQuestion(ctx), Constants.questionInterval);
+  } else {
+    resetToChoosingQuestion(ctx);
   }
 }

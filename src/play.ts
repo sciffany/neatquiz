@@ -32,8 +32,9 @@ export function handleAnswer(ctx: any) {
       answer.toLowerCase().startsWith(expectedAnswer)
     )
   ) {
-    updateScore(ctx);
-    broadcastScore(ctx, ctx.from.first_name);
+    const addedMarks = 5 - (botState.hintNumber >= 4 ? 4 : botState.hintNumber);
+    updateScore(ctx, addedMarks);
+    broadcastScore(ctx, ctx.from.first_name, addedMarks);
     botState.qNumber++;
     botState.mode = Mode.Asking;
     botState.hintMask = [];
@@ -87,24 +88,24 @@ export function giveHint(ctx: any) {
   ctx.reply(hint);
 }
 
-function updateScore(ctx: any) {
+function updateScore(ctx: any, addedMarks: number) {
   const botState = getBotState(ctx);
   const id = ctx.from.id;
   const first_name = ctx.from.first_name;
   if (!botState.scoreBoard.hasOwnProperty(id)) {
     botState.scoreBoard[id] = 0;
   }
-  botState.scoreBoard[id] +=
-    5 - (botState.hintNumber >= 4 ? 4 : botState.hintNumber);
+  botState.scoreBoard[id] += addedMarks;
+
   botState.playerNames[id] = first_name;
 }
 
-function broadcastScore(ctx: any, winner: string) {
+function broadcastScore(ctx: any, winner: string, addedMarks: number) {
   const botState = getBotState(ctx);
   ctx.reply(
     `Yes, it's ${
       botState.qna[botState.qNumber].answer.split(",")[0]
-    }!\n${winner} got it right. 5 marks!` +
+    }!\n${winner} got it right. ${addedMarks} marks!` +
       "\n\n" +
       "Scores:\n" +
       generateScoreBoard(ctx)

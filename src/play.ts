@@ -51,7 +51,7 @@ export function giveHint(ctx: any) {
   const botState = getBotState(ctx);
   if (botState.mode !== Mode.Answering) return;
 
-  const ans = botState.expectedAnswers[0].split("");
+  const ans = botState.qna[botState.qNumber].answer.split(",")[0];
   if (botState.hintNumber == 0) {
     botState.hintMask = new Array(ans.length).fill(0);
   }

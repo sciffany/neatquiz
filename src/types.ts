@@ -17,6 +17,8 @@ export type BotState = {
   qna: Qna[];
   qNumber: number;
   expectedAnswers: string[];
+  hintNumber: number;
+  hintMask: number[];
   scoreBoard: { [id: string]: number };
   playerNames: { [id: string]: string };
   menuId: string;

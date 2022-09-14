@@ -17,6 +17,8 @@ export function createEmptyBotState(ctx: any) {
     scoreBoard: {},
     playerNames: {},
     menuId: "",
+    hintMask: [],
+    hintNumber: 0,
   };
 }
 
@@ -30,6 +32,8 @@ export function resetToChoosingQuestion(ctx: any) {
     mode: Mode.ChooseQuestion,
     quizChoices: botStates[ctx.message.chat.id].quizChoices,
     menuId: botStates[ctx.message.chat.id].menuId,
+    hintMask: [],
+    hintNumber: 0,
   };
 }
 

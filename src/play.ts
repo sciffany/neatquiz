@@ -36,12 +36,55 @@ export function handleAnswer(ctx: any) {
     broadcastScore(ctx, ctx.from.first_name);
     botState.qNumber++;
     botState.mode = Mode.Asking;
+    botState.hintMask = [];
+    botState.hintNumber = 0;
     if (botState.qNumber !== botState.qna.length) {
       setTimeout(() => askQuestion(ctx), Constants.questionInterval);
     } else {
       resetToChoosingQuestion(ctx);
     }
   }
+}
+
+export function giveHint(ctx: any) {
+  const botState = getBotState(ctx);
+  if (botState.mode !== Mode.Answering) return;
+
+  const ans = botState.expectedAnswers[0].split("");
+  if (botState.hintNumber == 0) {
+    botState.hintMask = new Array(ans.length).fill(0);
+  }
+  let hint = "";
+
+  for (var i = 0; i < ans.length; i++) {
+    if (ans[i] === " " || ans[i] === "'") {
+      botState.hintMask[i] = 1;
+    }
+  }
+
+  if (botState.hintNumber > 0) {
+    var lettersToReveal = ans.length * 0.2;
+    for (var i = 0; i < lettersToReveal; i++) {
+      while (true) {
+        const indexToReveal = Math.floor(Math.random() * ans.length);
+        if (botState.hintMask[indexToReveal] !== 1) {
+          botState.hintMask[indexToReveal] = 1;
+          break;
+        }
+      }
+    }
+  }
+
+  for (var i = 0; i < ans.length; i++) {
+    if (botState.hintMask[i] === 1) {
+      hint += ans[i] + " ";
+    } else {
+      hint += "_ ";
+    }
+  }
+  botState.hintNumber += 1;
+
+  ctx.reply(hint);
 }
 
 function updateScore(ctx: any) {
@@ -51,7 +94,8 @@ function updateScore(ctx: any) {
   if (!botState.scoreBoard.hasOwnProperty(id)) {
     botState.scoreBoard[id] = 0;
   }
-  botState.scoreBoard[id] += 5;
+  botState.scoreBoard[id] +=
+    5 - (botState.hintNumber >= 4 ? 4 : botState.hintNumber);
   botState.playerNames[id] = first_name;
 }
 

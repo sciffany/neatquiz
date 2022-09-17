@@ -63,7 +63,7 @@ export function giveHint(ctx: any) {
     }
   }
 
-  if (botState.hintNumber > 0) {
+  if (botState.hintNumber > 0 && botState.hintNumber <= 4) {
     var lettersToReveal = ans.length * 0.2;
     for (var i = 0; i < lettersToReveal; i++) {
       while (true) {

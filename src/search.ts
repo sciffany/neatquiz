@@ -15,26 +15,14 @@ import { Constants } from "./constants";
 
 require("dotenv").config();
 const algoliasearch = require("algoliasearch");
-const client = algoliasearch("SWVXM265XB", process.env.ALGOLIA_API_KEY);
-const index = client.initIndex("quizzes");
 
 export async function searchQuiz(ctx: any) {
   const botState = getBotState(ctx);
   try {
     if (botState.mode !== Mode.Active && botState.mode !== Mode.ChooseQuestion)
       return;
-    const searchString = ctx.match[1];
-    if (searchString !== "" && searchString[0] !== " ") {
-      return;
-    }
-    const searchResults =
-      searchString === ""
-        ? await retrieveAll()
-        : (
-            await index.search(searchString, {
-              filters: "published:true",
-            })
-          ).hits;
+    const searchString = "";
+    const searchResults = await retrieveAll();
     const docIdIdentifier = searchString === "" ? "id" : "objectID";
 
     botState.mode = Mode.ChooseQuestion;
@@ -42,7 +30,9 @@ export async function searchQuiz(ctx: any) {
       (searchResults) => searchResults[docIdIdentifier]
     );
 
-    const quizMenu = searchResults
+    shuffle(searchResults);
+    const quizMenu = (searchResults as any)
+      .slice(0, 10)
       .map(
         (searchResult, index) =>
           `/quiz_${index + 1}\n${searchResult.title}\n${
@@ -106,4 +96,21 @@ export function showMenuAgain(ctx: any) {
   ctx.reply("Your quiz menu once again", {
     reply_to_message_id: botState.menuId,
   });
+}
+
+function shuffle(array) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
 }

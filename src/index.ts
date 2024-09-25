@@ -52,6 +52,6 @@ export const botStates: { [id: string]: BotState } = {};
 async function handleGenericResponse(ctx: any) {
   const botState = getBotState(ctx);
   if (botState.mode == Mode.Answering) {
-    await handleAnswer(ctx);
+    handleAnswer(ctx);
   }
 }

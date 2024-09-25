@@ -41,6 +41,10 @@ export async function searchQuiz(ctx: any) {
       )
       .join("\n\n");
 
+    botState.quizChoices = searchResults.map((searchResult) => {
+      return searchResult.id;
+    });
+
     if (quizMenu.length > 0) {
       botState.menuId = (
         await ctx.reply("Which quiz would you like to take?\n\n" + quizMenu)
